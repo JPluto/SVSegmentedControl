@@ -1,0 +1,100 @@
+h1. SVSegmentedControl
+
+SVSegmentedControl is a customizable @UIControl@ class that mimics UISegmentedControl but that looks like an UISwitch.
+
+
+!http://f.cl.ly/items/213N0a1k2U2O0F3y053z/svsegmentedcontrol3.png!
+
+h2. Installation
+
+* Drag the @SVSegmentedControl/SVSegmentedControl@ folder into your project.
+* Add the *QuartzCore* framework to your project.
+
+h2. Usage
+
+(see sample Xcode project in @/Demo@)
+
+In its simplest form, this is how you create an SVSegmentedControl instance:
+
+<pre>
+segmentedControl = [[SVSegmentedControl alloc] initWithSectionTitles:[NSArray arrayWithObjects:@"Section 1", @"Section 2", nil]];
+[segmentedControl addTarget:self action:@selector(segmentedControlChangedValue:) forControlEvents:UIControlEventValueChanged];
+
+[self.view addSubview:segmentedControl];
+[segmentedControl release];
+</pre>
+
+You're *highly encouraged* to position it using its @center@ property:
+
+<pre>
+segmentedControl.center = CGPointMake(160, 70);
+</pre>
+
+h2. Customization
+
+SVSegmentedControl can be customized with the following properties:
+
+<pre>
+@property (nonatomic, readwrite) NSUInteger selectedIndex; // default is 0
+@property (nonatomic, readwrite) UIEdgeInsets thumbEdgeInset; // default is UIEdgeInsetsMake(2, 2, 3, 2)
+@property (nonatomic, readwrite) BOOL animateToInitialSelection; // default is NO
+@property (nonatomic, retain) UIImage *backgroundImage; // default is nil
+@property (nonatomic, retain) UIFont *font; // default is [UIFont boldSystemFontOfSize:15]
+@property (nonatomic, retain) UIColor *textColor; // default is [UIColor grayColor];
+@property (nonatomic, retain) UIColor *shadowColor;  // default is [UIColor blackColor]
+@property (nonatomic, readwrite) CGSize shadowOffset;  // default is CGSizeMake(0, -1)
+@property (nonatomic, readwrite) UIEdgeInsets titleEdgeInsets; // default is UIEdgeInsetsMake(0, 10, 0, 10)
+@property (nonatomic, readwrite) CGFloat height; // default is 32.0
+@property (nonatomic, readwrite) BOOL crossFadeLabelsOnDrag; // default is NO
+</pre>
+
+Its thumb (@SVSegmentedThumb@) can be customized as well: 
+
+<pre>
+@property (nonatomic, retain) UIImage *backgroundImage; // default is nil
+@property (nonatomic, retain) UIImage *highlightedBackgroundImage; // default is nil
+@property (nonatomic, retain) UIColor *tintColor; // default is [UIColor grayColor]
+@property (nonatomic, retain) UIColor *textColor; // default is [UIColor whiteColor]
+@property (nonatomic, retain) UIColor *shadowColor; // default is [UIColor blackColor]
+@property (nonatomic, readwrite) CGSize shadowOffset; // default is CGSizeMake(0, -1)
+@property (nonatomic, readwrite) BOOL castsShadow; // default is YES (NO when backgroundImage is set)
+</pre>
+
+*Note*: to customize the thumb's appearance, you'll have to set the properties through SVSegmentedControl's @thumb@ property. For instance, setting the thumb's @tintColor@ is done with:
+
+<pre>
+segmentedControl.thumb.tintColor = someColor;
+</pre>
+
+h2. Responding to value changes
+
+SVSegmentedControl is now an UIControl subclass (thanks "Oliver Letterer":https://github.com/OliverLetterer) and so you respond to value changes using the standard @addTarget:action:forControlEvents:@ method:
+
+<pre>
+[mySegmentedControl addTarget:self action:@selector(segmentedControlChangedValue:) forControlEvents:UIControlEventValueChanged];
+</pre>
+
+Providing an action method ending with a semicolon, the sender object is therefore made accessible:
+
+<pre>
+- (void)segmentedControlChangedValue:(SVSegmentedControl*)segmentedControl {
+	NSLog(@"segmentedControl did select index %i", segmentedControl.selectedIndex);
+}
+</pre>
+
+If you're a big fan of blocks, you can also respond to value changes using a block handler:
+
+<pre>
+segmentedControl.selectedSegmentChangedHandler = ^(id sender) {
+	SVSegmentedControl *segmentedControl = (SVSegmentedControl *)sender;
+	NSLog(@"segmentedControl did select index %i", segmentedControl.selectedIndex);
+};
+</pre>
+
+h2. Automatic Reference Counting (ARC) support
+
+Maintaining an official ARC branch has proven to be too much work, often leading to confusion since the ARC branch is always a few commits behind. If you'd like to use SVSegmentedControl in your ARC-enabled project, you'll have to "add the @-fno-objc-arc@ compiler flag":http://stackoverflow.com/questions/6646052/how-can-i-disable-arc-for-a-single-file-in-a-project to all of SVSegmentedControl's files.
+
+h2. Credits
+
+SVSegmentedControl is brought to you by "Sam Vermette":http://samvermette.com and "contributors to the project":https://github.com/samvermette/SVSegmentedControl/contributors. If you have feature suggestions or bug reports, feel free to help out by sending pull requests or by "creating new issues":https://github.com/samvermette/SVSegmentedControl/issues/new. If you're using SVSegmentedControl in your project, proper attribution would be nice.
